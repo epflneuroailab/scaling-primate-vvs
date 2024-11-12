@@ -1,0 +1,10 @@
+experiment_name: efficientnet_benchmarks
+base_config: ../model_base.yaml
+
+data_filters:
+    set_filters:
+        arch_family:
+            - EfficientNet
+
+experiment_description: >
+    ""

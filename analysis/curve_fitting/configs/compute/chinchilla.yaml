@@ -1,0 +1,85 @@
+experiment_name: compute_chinchilla
+
+data_filters:
+    set_filters:
+        dataset:
+            - imagenet
+            - ecoset
+        region:
+            - V1
+            - V2
+            - V4
+            - IT
+            - Behavioral
+
+
+    boolean_filters:
+        equals_false:
+            - is_pretrained
+            - is_random
+            - is_ssl
+            - is_adv
+            - is_ablation
+
+    group_by:
+        avg_score:
+            keys:
+                - model_id
+                - arch
+                - dataset
+                - flops
+                - n_params
+                - n_samples
+                - n_samples_seen
+                - total_flops
+                - arch_family
+                - samples_per_class
+            reduce:
+                score: mean
+
+    arch_families_samples: # filter_arch_family_by_samples function parameters
+        arch_family:
+            - ConvNeXt
+            - ConvNeXtFlex
+            - ViT
+            - ViTFlex
+        samples_per_class: 
+            - 0 # All samples
+            - 300
+
+    combine_arch_families: True
+
+fitting_parameters:
+    curve_type: 'two_variables'
+    X1: n_params
+    X2: n_samples_seen
+    Y: score
+    delta: 1e-3
+    method: 'BFGS' # 'BFGS' or 'L-BFGS-B'
+    use_log: True
+    X1_scaler: 1e5
+    X2_scaler: 1e4
+    loss_function: chinchilla_LSE
+    num_bootstraps: 1000
+    data_fraction: 1
+    random_seed: 42
+    initial_parameters:
+        e: [-1, -0.5, 0, 0.5, 1]
+        a: [0, 5, 10, 15, 20, 25]
+        alpha: [0, 0.5, 1, 1.5, 2]
+        b: [0, 5, 10, 15, 20, 25]
+        beta: [0, 0.5, 1, 1.5, 2]
+
+visualization:
+    loss_function: chinchilla
+
+
+experiment_description: >
+    This experiment computes the chinchilla loss for all models in the imagenet and ecoset datasets.
+    The loss is computed using the LSE metric, and the number of bootstraps is set to 1000.
+    The models are filtered by the following criteria:
+    - The dataset is either imagenet or ecoset
+    - The model is not pretrained, random, ssl, adv, or ablation
+    - The model is in the ConvNeXt, ConvNeXtFlex, ViT, or ViTFlex architecture families
+    - The number of samples per class is either 0 or 300
+    The experiment is run on the full dataset, and the results are saved in the chinchilla_loss.csv file.

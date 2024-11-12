@@ -1,0 +1,11 @@
+experiment_name: v2_scaling
+base_config: ../region_base.yaml
+
+data_filters:
+    set_filters:
+        region:
+            - V2
+
+
+experiment_description: >
+    ""

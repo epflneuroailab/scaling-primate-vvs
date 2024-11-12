@@ -1,0 +1,12 @@
+experiment_name: sample_ecoset_scaling
+base_config: sample_base.yaml
+
+
+data_filters:
+    set_filters:
+        dataset:
+            - ecoset
+
+
+experiment_description: >
+    ""

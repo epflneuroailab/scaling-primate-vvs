@@ -1,0 +1,10 @@
+experiment_name: model_convnext_behavior
+base_config: convnext_base.yaml
+
+data_filters:
+    set_filters:
+        region:
+            - Behavioral
+
+experiment_description: >
+    ""

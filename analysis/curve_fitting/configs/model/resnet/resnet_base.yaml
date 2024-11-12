@@ -1,0 +1,10 @@
+experiment_name: resnet_benchmarks
+base_config: ../model_base.yaml
+
+data_filters:
+    set_filters:
+        arch_family:
+            - ResNet
+
+experiment_description: >
+    ""

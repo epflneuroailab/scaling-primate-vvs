@@ -1,0 +1,18 @@
+experiment_name: vit_benchmarks
+base_config: ../model_base.yaml
+
+data_filters:
+    set_filters:
+        arch_family:
+            - ViT
+
+fitting_parameters:
+    loss_function: power_law_shift_LSE
+    initial_parameters:
+        lambda_: [0, 0.5, 1, 1.5, 2]
+
+visualization:
+    loss_function: power_law_shift
+
+experiment_description: >
+    ""

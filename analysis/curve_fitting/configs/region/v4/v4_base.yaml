@@ -1,0 +1,11 @@
+experiment_name: v4_scaling
+base_config: ../region_base.yaml
+
+data_filters:
+    set_filters:
+        region:
+            - V4
+
+
+experiment_description: >
+    ""

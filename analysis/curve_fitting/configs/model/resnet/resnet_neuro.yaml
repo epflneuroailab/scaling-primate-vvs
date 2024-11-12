@@ -1,0 +1,13 @@
+experiment_name: model_resnet_neuro
+base_config: resnet_base.yaml
+
+data_filters:
+    set_filters:
+        region:
+            - V1
+            - V2
+            - V4
+            - IT
+
+experiment_description: >
+    ""

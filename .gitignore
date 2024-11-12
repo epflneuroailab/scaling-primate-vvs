@@ -6,8 +6,8 @@ wandb/*
 slurm/*
 temp/*
 
-analysis/curve_fitting/fitting_artifacts/*
-analysis/curve_fitting/fitting_results/*
+analysis/curve_fitting/fitting_artifacts*/*
+analysis/curve_fitting/fitting_results*/*
 analysis/visualization/figures/*
 
 

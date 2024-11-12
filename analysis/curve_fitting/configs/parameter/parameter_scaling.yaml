@@ -1,0 +1,66 @@
+experiment_name: parameter_scaling
+
+
+data_filters:
+    set_filters:
+        dataset:
+            - imagenet
+            - ecoset
+        region:
+            - V1
+            - V2
+            - V4
+            - IT
+            - Behavioral
+        samples_per_class:
+            - 0
+
+
+    boolean_filters:
+        equals_false:
+            - is_pretrained
+            - is_random
+            - is_ssl
+            - is_adv
+            - is_ablation
+
+    group_by:
+        avg_score:
+            keys:
+                - model_id
+                - arch
+                - dataset
+                - flops
+                - n_params
+                - n_samples
+                - n_samples_seen
+                - total_flops
+                - arch_family
+                - samples_per_class
+            reduce:
+                score: mean
+
+    combine_arch_families: True
+
+fitting_parameters:
+    curve_type: 'one_variable'
+    X: n_params
+    Y: score
+    delta: 1e-3
+    method: 'BFGS' # 'BFGS' or 'L-BFGS-B'
+    use_log: True
+    X_scaler: 1e5
+    loss_function: power_law_LSE
+    num_bootstraps: 1000
+    data_fraction: 1
+    random_seed: 42
+    initial_parameters:
+        e: [-1, -0.5, 0, 0.5, 1]
+        a: [0, 5, 10, 15, 20, 25]
+        alpha: [0, 0.5, 1, 1.5, 2]
+
+visualization:
+    loss_function: power_law
+
+experiment_description: >
+    ""

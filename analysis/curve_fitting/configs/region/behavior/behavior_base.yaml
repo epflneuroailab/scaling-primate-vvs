@@ -1,0 +1,11 @@
+experiment_name: behavior_scaling
+base_config: ../region_base.yaml
+
+data_filters:
+    set_filters:
+        region:
+            - Behavioral
+
+
+experiment_description: >
+    ""

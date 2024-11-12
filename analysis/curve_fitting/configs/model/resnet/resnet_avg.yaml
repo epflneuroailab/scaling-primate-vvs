@@ -1,0 +1,14 @@
+experiment_name: model_resnet_avg
+base_config: resnet_base.yaml
+
+data_filters:
+    set_filters:
+        region:
+            - V1
+            - V2
+            - V4
+            - IT
+            - Behavioral
+
+experiment_description: >
+    ""

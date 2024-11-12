@@ -1,0 +1,13 @@
+experiment_name: region_v1_group1
+base_config: v1_base.yaml
+
+data_filters:
+    set_filters:
+        arch_family:
+            - ResNet
+            - EfficientNet
+            - CORnet-S
+            - AlexNet
+
+experiment_description: >
+    ""
