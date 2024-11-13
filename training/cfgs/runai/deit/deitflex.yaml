@@ -1,0 +1,14 @@
+defaults: cfgs/runai/deit/defaults.yaml
+
+# Model
+arch: deitflex-l-0
+drop_path_rate: 0.0
+
+# Layer Confgiuration
+geomspace_start: 1
+geomspace_end: 8
+geomspace_num: 4
+
+# Logging
+run_name: deitflex-l-0_imagenet_full
+save_dir: '/mnt/scratch/akgokce/brain/outputs_custom'

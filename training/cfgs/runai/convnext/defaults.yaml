@@ -1,0 +1,74 @@
+# Model
+device: 'gpu'
+drop_path_rate: 0.1
+layer_scale_init_value: 1e-6
+layer_decay: 1.0
+head_init_scale: 1.0
+model_ema: True
+model_ema_decay: 0.9999
+model_ema_eval: True
+compile_mode: 'default'
+# channels_last: True
+
+# Optimizer & LR scheme
+loss_fn: 'soft_target_cross_entropy'
+max_duration: '300ep'
+batch_size: 512
+opt: 'adamw'
+lr: 4e-3
+min_lr: 1e-6
+lr_scheduler: 'cosineannealinglrwithwarmup'
+lr_warmup_duration: '20ep'
+weight_decay: 0.05
+opt_betas: [0.9, 0.999]
+opt_eps: 1e-8
+# clip_grad: None
+label_smoothing: 0.1
+accumulation_steps: 1
+target_batch_size: 4096
+
+# Data
+data_path: '/mnt/scratch/akgokce/datasets/imagenet/'
+dataset: 'imagenet'
+num_classes: 1000
+workers: 10
+pin_memory: True
+train_samples: 0
+seed: 0
+
+# Augmentation
+transform_lib: 'timm'
+train_crop_size: 224
+val_resize_size: 256
+val_crop_size: 224
+interpolation: bicubic
+color_jitter: 0.4
+aa: 'rand-m9-mstd0.5-inc1'
+re_prob: 0.25
+re_mode: pixel
+re_count: 1
+
+
+# MixUp / CutMix
+mixup: 0.8
+cutmix: 1.0
+# cutmix_minmax: None
+mixup_prob: 1.0
+mixup_switch_prob: 0.5
+mixup_mode: 'batch'
+
+
+# Misc
+disable_progress_bar: False
+lr_monitor: False
+log_interval: "1ba"
+# log_dir: '/scratch/izar/akgokce/scalingLaws/logs_filters'
+# log_dir: '/home/akgokce/brain/scalingLaws/logs/logs_filters'
+
+# Logging
+eval_interval: '1ep'
+# run_name: ' # Should be defined model-wise
+wandb_project: 'scalingLaws'
+wandb_entity: 'akgokce'
+save_dir: '/mnt/scratch/akgokce/brain/outputs2/'
+

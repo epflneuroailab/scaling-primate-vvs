@@ -1,0 +1,15 @@
+defaults: cfgs/runai/convnext/defaults.yaml
+
+# Model
+arch: convnextflex-l-0
+drop_path_rate: 0.0
+compile_mode: None
+
+# Layer Confgiuration
+geomspace_start: 1
+geomspace_end: 8
+geomspace_num: 4
+
+# Logging
+run_name: convnextflex-l-0_imagenet_full
+save_dir: '/mnt/scratch/akgokce/brain/outputs_custom'

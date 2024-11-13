@@ -1,0 +1,19 @@
+defaults: cfgs/runai/dino/defaults.yaml
+
+# Model
+arch: vit_small_patch16_224
+ssl_in_dim: 384
+dynamic_img_size: True
+drop_path_rate: 0.1
+use_timm: True
+# concat_forward_pass: False
+# norm_last_layer: True
+batch_size: 64
+target_batch_size: 128
+# momentum_teacher: 0.9996
+teacher_temp: 0.07
+lr: 2.5e-4
+use_dino_org_vit: True
+
+# Logging
+run_name: dino_vit_small_org_imagenet_full

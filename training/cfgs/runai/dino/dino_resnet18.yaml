@@ -1,0 +1,12 @@
+defaults: cfgs/runai/dino/defaults.yaml
+
+# Model
+arch: resnet18
+ssl_in_dim: 512
+batch_size: 256
+target_batch_size: 512
+momentum_teacher: 0.9995
+lr: 10e-4
+
+# Logging
+run_name: dino_resnet18_imagenet_full

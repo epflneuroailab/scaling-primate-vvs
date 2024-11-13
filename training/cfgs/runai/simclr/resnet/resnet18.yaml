@@ -1,0 +1,10 @@
+defaults: cfgs/runai/simclr/defaults.yaml
+
+# Model
+arch: resnet18
+ssl_in_dim: 512
+ssl_bn_in_head: True
+# should_reconstruct_model: True
+
+# Logging
+run_name: simclr_resnet18_imagenet_full

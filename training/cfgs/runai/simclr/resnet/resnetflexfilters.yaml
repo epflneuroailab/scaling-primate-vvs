@@ -1,0 +1,10 @@
+defaults: cfgs/runai/simclr/defaults.yaml
+
+# Model
+arch: resnetflexfilters
+ssl_in_dim: 0
+ssl_bn_in_head: True
+# should_reconstruct_model: True
+
+# Logging
+run_name: simclr_resnetflexfilters_imagenet_full

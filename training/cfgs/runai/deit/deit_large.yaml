@@ -1,0 +1,11 @@
+defaults: cfgs/runai/deit/defaults.yaml
+
+# Model
+arch: deit3_large_patch16_224
+drop_path_rate: 0.4
+
+# Data
+batch_size: 256
+
+# Logging
+run_name: deit3_large_imagenet_full

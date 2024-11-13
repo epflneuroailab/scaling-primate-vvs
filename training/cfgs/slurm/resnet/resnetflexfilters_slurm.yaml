@@ -1,0 +1,49 @@
+# Model
+arch: resnetflexfilters
+device: 'gpu'
+# compile_mode: 'default'
+channels_last: True
+
+# Filters
+geomspace_start: 1
+geomspace_end: 16
+geomspace_num: 20
+geomspace_id: 0
+
+# Optimizer & LR scheme
+max_duration: '100ep'
+batch_size: 256
+opt: 'sgd'
+lr: 0.1
+lr_scheduler: 'cosineannealinglrwithwarmup'
+lr_warmup_duration: '5ep'
+momentum: 0.9
+weight_decay: 1e-4
+
+
+# Data
+data_path: '/scratch/izar/akgokce/imagenet/'
+workers: 16
+pin_memory: True
+train_samples: 0
+seed: 0
+
+# Resizing
+val_resize_size: 256
+val_crop_size: 224
+train_crop_size: 224
+
+# Misc
+# disable_progress_bar: True
+lr_monitor: False
+log_interval: "100ba"
+# log_dir: '/scratch/izar/akgokce/scalingLaws/logs_filters'
+# log_dir: '/home/akgokce/brain/scalingLaws/logs/logs_filters'
+
+# Logging
+eval_interval: '1ep'
+run_name: 'resnetflexfilters_imagenet_full'
+wandb_project: 'scalingLaws'
+wandb_entity: 'akgokce'
+# save_dir: '/work/upschrimpf1/akgokce/scalingLaws/outputs2'
+save_dir: '/scratch/izar/akgokce/outputs'

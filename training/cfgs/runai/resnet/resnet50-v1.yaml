@@ -1,0 +1,64 @@
+# Model
+arch: resnet50
+device: 'gpu'
+compile: default
+model_ema: True
+model_ema_decay: 0.9999
+model_ema_eval: True
+
+# Optimizer & LR scheme
+loss_fn: 'soft_target_cross_entropy'
+max_duration: '300ep'
+batch_size: 512
+opt: 'adamw'
+lr: 4e-3
+min_lr: 1e-6
+lr_scheduler: 'cosineannealinglrwithwarmup'
+lr_warmup_duration: '20ep'
+weight_decay: 0.05
+opt_betas: [0.9, 0.999]
+opt_eps: 1e-8
+# clip_grad: None
+label_smoothing: 0.1
+accumulation_steps: 1
+target_batch_size: 4096
+
+
+# Data
+data_path: '/mnt/scratch/akgokce/imagenet/'
+workers: 32
+pin_memory: True
+train_samples: 0
+seed: 0
+
+# Augmentation
+transform_lib: 'timm'
+train_crop_size: 224
+val_resize_size: 256
+val_crop_size: 224
+interpolation: bicubic
+color_jitter: 0.4
+aa: 'rand-m9-mstd0.5-inc1'
+re_prob: 0.25
+re_mode: pixel
+re_count: 1
+
+
+# MixUp / CutMix
+mixup: 0.8
+cutmix: 1.0
+# cutmix_minmax: None
+mixup_prob: 1.0
+mixup_switch_prob: 0.5
+mixup_mode: 'batch'
+
+# Misc
+disable_progress_bar: False
+
+# Logging
+eval_interval: '1ep'
+run_name: 'resnet50_imagenet_full'
+wandb_project: 'scalingLaws'
+wandb_entity: 'akgokce'
+save_dir: '/mnt/scratch/akgokce/brain/outputs2/'
+

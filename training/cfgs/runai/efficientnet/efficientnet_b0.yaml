@@ -1,0 +1,8 @@
+defaults: cfgs/runai/efficientnet/defaults.yaml
+
+# Model
+arch: efficientnet_b0
+
+# Logging
+run_name: efficientnet_b0_test
+# run_name: efficientnet_b0_imagenet_full

@@ -1,0 +1,87 @@
+## For detailed explanations, please refer to https://github.com/facebookresearch/dino/blob/main/main_dino.py
+
+# Model
+device: 'gpu'
+model_ema: False
+compile_mode: 'None'
+# channels_last: True
+ssl_method: 'dino'
+ssl_bn_in_head: False
+ssl_out_dim: 65536
+ssl_hidden_dim: 2048
+ssl_bottleneck_dim: 256
+norm_last_layer: True # False with vit_small and True with vit_base
+momentum_teacher: 0.996 # Higher value with small batches: 0.9995 with batch size of 256
+warmup_teacher_temp: 0.04
+teacher_temp: 0.04 # above 0.07 is not recommended
+warmup_teacher_temp_epochs: 30
+freeze_last_layer: 1 # "Number of epochs during the output layer is kept fixed
+concat_forward_pass: True
+sync_batchnorm: True
+
+# Optimizer & LR scheme
+loss_fn: 'dino_loss'
+max_duration: '300ep'
+batch_size: 256
+opt: 'adamw'
+lr: 5e-4          #  lr 0.0005 at batch_size=256, linear scaling rule
+min_lr: 1e-6
+lr_scheduler: 'cosineannealinglrwithwarmup'
+lr_warmup_duration: '10ep'
+weight_decay: 0.04
+weight_decay_end: 0.4
+use_weight_decay_scheduler: True
+# opt_betas: [0.9, 0.999]
+# opt_eps: 1e-8
+clip_grad: 3.0
+label_smoothing: 0.0
+accumulation_steps: 1
+target_batch_size: None
+
+# Data
+data_path: '/mnt/scratch/akgokce/datasets/imagenet/'
+dataset: 'imagenet'
+num_classes: 1000
+workers: 10
+pin_memory: True
+train_samples: 0
+repeated_aug: False
+seed: 0
+
+# Augmentation
+transform_lib: 'lightly'
+train_crop_size: 224
+val_resize_size: 256
+val_crop_size: 224
+interpolation: bicubic
+lightly_aug_set: 'dino'
+
+# Multi-crop parameters
+global_crops_scale: [0.4, 1.] # Scale range of the cropped image before resizing, relatively to the origin image. Used for large global view cropping.
+local_crops_number: 8 # Number of small local views to generate. Set this parameter to 0 to disable multi-crop training.
+local_crops_scale: [0.05, 0.4] # Scale range of the cropped image before resizing, relatively to the origin image. Used for small local view cropping of multi-crop.
+local_crop_size: 96 # Size of the small local views after resizing.
+
+# MixUp / CutMix
+mixup: 0.0
+cutmix: 0.0
+# cutmix_minmax: None
+mixup_prob: 0.0
+mixup_switch_prob: 0.0
+mixup_mode: 'batch'
+
+
+# Misc
+disable_progress_bar: False
+lr_monitor: False
+log_interval: "1ba"
+# log_dir: '/scratch/izar/akgokce/scalingLaws/logs_filters'
+# log_dir: '/home/akgokce/brain/scalingLaws/logs/logs_filters'
+
+# Logging
+eval_interval: '1ep'
+# run_name: ' # Should be defined model-wise
+wandb_project: 'scalingLaws'
+wandb_entity: 'akgokce'
+save_dir: '/mnt/scratch/akgokce/brain/outputs2/'
+

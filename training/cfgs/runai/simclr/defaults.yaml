@@ -1,0 +1,79 @@
+# Model
+device: 'gpu'
+model_ema: False
+compile_mode: 'default'
+# channels_last: True
+ssl_method: 'simclr'
+simclr_temperature: 0.5
+ssl_bn_in_head: False
+ssl_out_dim: 128
+ssl_hidden_dim: 2048
+ssl_num_layers: 2
+concat_forward_pass: True
+simclr_gather_distributed: True
+sync_batchnorm: True
+
+# Optimizer & LR scheme
+# lr1 = 0.075 * sqrt(batch_size) - lr2 = 0.3 * batch_size / 256
+# for batch_size=4096, lr1 = lr2 = 4.8
+# for batch_size=512, lr1 = 1.697, lr2 = 0.6
+# for batch_size=256, lr1 =  1.2, lr2  = 0.3
+loss_fn: 'ntxent_loss'
+max_duration: '100ep' # Changed from 300ep to 100ep
+batch_size: 256
+opt: 'lars'
+lr: 1.697
+min_lr: 1e-6
+lr_scheduler: 'cosineannealinglrwithwarmup'
+lr_warmup_duration: '10ep'
+weight_decay: 1e-6
+# weight_decay_end: 0.4
+# use_weight_decay_scheduler: True
+# opt_betas: [0.9, 0.999]
+# opt_eps: 1e-8
+# clip_grad: 3.0
+label_smoothing: 0.0
+accumulation_steps: 1
+target_batch_size: 512
+
+# Data
+data_path: '/mnt/scratch/akgokce/datasets/imagenet/'
+dataset: 'imagenet'
+num_classes: 1000
+workers: 16
+pin_memory: True
+train_samples: 0
+repeated_aug: False
+seed: 0
+
+# Augmentation
+transform_lib: 'lightly'
+train_crop_size: 224
+val_resize_size: 256
+val_crop_size: 224
+interpolation: bicubic
+lightly_aug_set: 'simclr'
+
+# MixUp / CutMix
+mixup: 0.0
+cutmix: 0.0
+# cutmix_minmax: None
+mixup_prob: 0.0
+mixup_switch_prob: 0.0
+mixup_mode: 'batch'
+
+
+# Misc
+disable_progress_bar: False
+lr_monitor: False
+log_interval: "1ba"
+# log_dir: '/scratch/izar/akgokce/scalingLaws/logs_filters'
+# log_dir: '/home/akgokce/brain/scalingLaws/logs/logs_filters'
+
+# Logging
+eval_interval: '1ep'
+# run_name: ' # Should be defined model-wise
+wandb_project: 'scalingLaws'
+wandb_entity: 'akgokce'
+save_dir: '/mnt/scratch/akgokce/brain/outputs_simclr/'
+

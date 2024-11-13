@@ -1,0 +1,8 @@
+defaults: cfgs/runai/convnext/defaults.yaml
+
+# Model
+arch: convnext_tiny
+drop_path_rate: 0.1
+
+# Logging
+run_name: convnext_tiny_imagenet_full

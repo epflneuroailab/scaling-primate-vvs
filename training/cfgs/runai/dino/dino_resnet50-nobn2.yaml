@@ -1,0 +1,35 @@
+defaults: cfgs/runai/dino/defaults.yaml
+
+# Model
+arch: resnet50
+ssl_in_dim: 2048
+ssl_out_dim: 65536
+teacher_temp: 0.07
+warmup_teacher_temp_epochs: 30
+momentum_teacher: 0.9995
+freeze_last_layer: 1
+ssl_bn_in_head: false
+sync_batchnorm: false
+
+# Optimizer & LR scheme
+# default total batch size: 51*80=4080, 0.3 lr, 0.0048 min_lr, 800 epochs
+opt: adamw
+lr: 5e-4  # 8x64=512 batch_size -> 0.03 lr => 256 batch_size -> 0.015 | 5e-4 for 256
+min_lr: 1e-6
+weight_decay: 5e-2
+weight_decay_end: 5e-2
+clip_grad: 0
+batch_size: 128
+target_batch_size: 256
+
+# Multi-crop parameters
+global_crops_scale: [0.25, 1.0]
+local_crops_scale: [0.05, 0.25]
+local_crops_number: 10
+
+
+
+
+
+# Logging
+run_name: dino_resnet50_imagenet_full

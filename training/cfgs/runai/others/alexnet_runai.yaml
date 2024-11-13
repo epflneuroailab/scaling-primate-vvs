@@ -1,0 +1,40 @@
+# Model
+arch: alexnet
+device: 'gpu'
+compile_mode: 'max-autotune'
+# channels_last: True
+
+# Optimizer & LR scheme
+max_duration: '100ep'
+batch_size: 256
+# target_batch_size: 4096
+opt: 'sgd'
+lr: 0.1
+lr_scheduler: 'cosineannealinglrwithwarmup'
+lr_warmup_duration: '5ep'
+momentum: 0.9
+weight_decay: 1e-4
+
+
+# Data
+data_path: '/mnt/scratch/akgokce/datasets/imagenet/'
+workers: 32
+pin_memory: True
+train_samples: 0
+seed: 0
+
+# Resizing
+val_resize_size: 256
+val_crop_size: 224
+train_crop_size: 224
+
+# Misc
+disable_progress_bar: False
+
+# Logging
+eval_interval: '1ep'
+run_name: 'alexnet_imagenet_full'
+wandb_project: 'scalingLaws'
+wandb_entity: 'akgokce'
+save_dir: '/mnt/scratch/akgokce/brain/outputs2/'
+

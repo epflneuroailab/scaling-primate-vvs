@@ -1,0 +1,27 @@
+# Attack configuration
+adv_attack_mode: ffgsm
+adv_eps: 2
+adv_alpha: 2.5
+adv_divisor: 255
+
+# Training
+max_duration: 10ep
+opt: sgd
+lr: 1e-1
+compile_mode: None
+
+# weight_decay: 5e-2
+# opt: adamw
+# lr: 1e-4
+# weight_decay: 5e-2
+
+lr_scheduler: linearwithwarmup
+lr_warmup_duration: 2ep
+min_lr: 1e-5
+
+# lr_scheduler: steplr
+# lr_step_size: 1ep
+# lr_gamma: 0.1
+
+# Logging
+save_dir: '/mnt/scratch/akgokce/brain/outputs_adv/'

@@ -1,0 +1,8 @@
+defaults: cfgs/runai/deit/defaults.yaml
+
+# Model
+arch: deit3_base_patch16_224
+drop_path_rate: 0.1
+
+# Logging
+run_name: deit3_base_imagenet_full

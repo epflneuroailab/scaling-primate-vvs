@@ -1,0 +1,16 @@
+defaults: cfgs/runai/simclr/defaults.yaml
+
+# Model
+arch: resnet50
+ssl_in_dim: 2048
+ssl_bn_in_head: True
+# sync_batchnorm: True
+
+
+# Optimizer & LR scheme
+# default total batch size: 51*80=4080, 0.3 lr, 0.0048 min_lr, 800 epochs
+batch_size: 256
+target_batch_size: 512
+
+# Logging
+run_name: simclr_resnet50_imagenet_full

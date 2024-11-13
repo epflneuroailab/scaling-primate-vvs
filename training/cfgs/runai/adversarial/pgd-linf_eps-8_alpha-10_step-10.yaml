@@ -1,0 +1,5 @@
+adv_attack_mode: pgd_linf
+adv_eps: 8
+adv_alpha: 10
+adv_divisor: 255
+adv_step: 10

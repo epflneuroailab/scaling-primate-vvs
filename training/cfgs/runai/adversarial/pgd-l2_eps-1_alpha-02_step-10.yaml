@@ -1,0 +1,5 @@
+adv_attack_mode: pgd_l2
+adv_eps: 1
+adv_alpha: 0.2
+adv_divisor: 1
+adv_step: 10
