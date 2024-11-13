@@ -3,8 +3,9 @@ profiling/*
 logs/*
 data/*
 wandb/*
-slurm/*
 temp/*
+training/slurm/*
+brainscore/slurm/*
 
 # analysis/curve_fitting/outputs/*
 # analysis/curve_fitting/fitting_results*/*
