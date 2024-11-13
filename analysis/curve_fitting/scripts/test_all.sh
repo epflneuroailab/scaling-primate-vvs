@@ -1,6 +1,6 @@
 # conda activate brain
 
-RESULTS_CSV=../../results/benchmark_scores_local.csv
+RESULTS_CSV=../../results/benchmark_scores.csv
 OUTPUT_DIR=./fitting_results_test
 ARTIFACT_DIR=./fitting_artifacts_test
 NUM_BOOTSTRAPS=10
