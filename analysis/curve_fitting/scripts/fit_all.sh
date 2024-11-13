@@ -1,8 +1,8 @@
 # conda activate brain
 
 RESULTS_CSV=../../results/benchmark_scores.csv
-OUTPUT_DIR=./fitting_results
-ARTIFACT_DIR=./fitting_artifacts
+OUTPUT_DIR=./outputs/fitting_results
+ARTIFACT_DIR=./outputs/fitting_artifacts
 NUM_WORKERS=8
 
 ALL_CONFIGS=(

@@ -6,7 +6,7 @@ wandb/*
 slurm/*
 temp/*
 
-analysis/curve_fitting/fitting_artifacts*/*
+# analysis/curve_fitting/outputs/*
 # analysis/curve_fitting/fitting_results*/*
 visualization/figures/*
 
@@ -26,7 +26,7 @@ visualization/figures/*
 !results/*
 !.gitkeep
 # !analysis/curve_fitting/fitting_artifacts/*/results.pkl
-!analysis/curve_fitting/fitting_results/**/results.pkl
+!analysis/curve_fitting/outputs/fitting_results/**/results.pkl
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
