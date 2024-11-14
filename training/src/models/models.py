@@ -19,8 +19,6 @@ from .others import create_alexnet_model, create_vit_model, VIT_MODELS
 from .aim import create_aim_model, AIM_MODELS
 from .convnext import create_convnext_model, CONVNEXT_MODELS
 from .deit import create_deit_model, DEIT_MODELS
-from .ssl import wrap_ssl_model
-from .adversarial import wrap_adv_model
 
 
 def create_model(**kwargs):
@@ -97,8 +95,10 @@ def create_model(**kwargs):
         raise ValueError(f"Invalid model: {arch}")
     
     if ssl_method:
+        from .ssl import wrap_ssl_model
         model = wrap_ssl_model(model, **kwargs)
     elif adv_config:
+        from .adversarial import wrap_adv_model
         model = wrap_adv_model(model, **kwargs)
     
     if checkpoint:

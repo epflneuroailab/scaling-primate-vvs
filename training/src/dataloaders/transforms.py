@@ -6,7 +6,6 @@ import albumentations as A
 from albumentations.pytorch import ToTensorV2
 from timm.data.auto_augment import rand_augment_transform
 from timm.data import create_transform as create_transforms_timm
-import lightly.transforms as LT
 
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD = [0.229, 0.224, 0.225]
@@ -96,6 +95,8 @@ def create_transforms_pytorch(
             ]
         )
     elif aug_set == 'ThreeAugment':
+        import lightly.transforms as LT
+        
         transform_train = transforms.Compose(
             [
                 transforms.RandomResizedCrop(train_crop_size, interpolation=interpolation),
@@ -207,6 +208,8 @@ def create_transforms_albumentations(
     return transform_train, transform_val
 
 def create_transforms_lightly(**kwargs) -> tuple:
+    import lightly.transforms as LT
+    
     lightly_aug_set = kwargs.get("lightly_aug_set")
     if lightly_aug_set == 'dino':
         global_crops_scale = kwargs.get('global_crops_scale', (0.4, 1.))
