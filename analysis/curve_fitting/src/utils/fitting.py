@@ -28,7 +28,7 @@ def get_bootstrapped_samples(df: pd.DataFrame, num_bootstraps: int, data_fractio
     return bootstrap_samples
 
 
-def prepare_data_for_fitting(df: pd.DataFrame, fitting_params: dict, invert_Y:bool = True) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+def prepare_data_for_fitting(df: pd.DataFrame, fitting_params: dict) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
     Prepares data for curve fitting based on the provided fitting parameters.
     Parameters:
@@ -44,7 +44,6 @@ def prepare_data_for_fitting(df: pd.DataFrame, fitting_params: dict, invert_Y:bo
         - 'X1_scaler' (float, optional): Scaling factor for the first independent variable (default is 1).
         - 'X2_scaler' (float, optional): Scaling factor for the second independent variable (default is 1).
         - 'initial_parameters' (list of lists): Initial parameters for the fitting process.
-    invert_Y (bool): Whether to invert the dependent variable (default is True).
     Returns:
     Tuple[np.ndarray, np.ndarray, np.ndarray]: A tuple containing:
         - X (np.ndarray): Scaled independent variable(s).
@@ -69,6 +68,7 @@ def prepare_data_for_fitting(df: pd.DataFrame, fitting_params: dict, invert_Y:bo
         raise ValueError(f"Unknown fitting type: {fitting_type}")
 
     Y = df[fitting_params['Y']].values
+    invert_Y = fitting_params.get('invert_Y', True)
     if invert_Y:
         Y = 1 - Y
 
@@ -209,4 +209,10 @@ def convert_loss_parameters_batch(params: List[Union[List[float], Tuple[float]]]
         If the combination of `src_loss` and `dst_loss` is invalid or unsupported.
 
     """
-    return [convert_loss_parameters(p, src_loss, dst_loss) for p in params]
+    new_params = [convert_loss_parameters(p, src_loss, dst_loss) for p in params]
+    new_params = np.array(new_params)
+    if np.any(np.isinf(new_params)):
+        print("Detected infinite values in the parameters")
+        new_params = new_params[~np.isinf(new_params).any(axis=1),:]
+        print(f"Removed {len(params) - len(new_params)} rows with infinite values")
+    return new_params

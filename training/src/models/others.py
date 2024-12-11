@@ -16,7 +16,7 @@ class ViTBase(ClassifierBase):
         loss_fn=None,
         **kwargs
     ):
-        if num_classes != 1000:
+        if num_classes is not None and num_classes>0 and num_classes != 1000:
             module.head = nn.Linear(
                 in_features=module.head.in_features,
                 out_features=num_classes,
@@ -64,21 +64,24 @@ VIT_MODELS = [
 
 def create_vit_model(**kwargs):
     use_timm = kwargs.get("use_timm", False)
+    arch = kwargs.get("arch", None).replace(':', '.')
     if not use_timm:
-        arch = kwargs.get("arch", None)
         weights = kwargs.get("weights", "DEFAULT")
         assert arch in VIT_MODELS, f"Invalid ViT model: {arch}"
         model = eval(f"torchvision.models.{arch}")(weights=weights)
         model = ViTBase(model, **kwargs)
     else:
-        model = timm.create_model(
-            arch, 
-            pretrained=kwargs.get("pretrained", False),
-            num_classes=kwargs.get("num_classes", 1000),
-            drop_path_rate=kwargs.get("drop_path_rate", None),
-            init_values=kwargs.get("init_values", None),
-            dynamic_img_size=kwargs.get("dynamic_img_size", None),
-        )
+        timm_config = {
+            'model_name': arch, 
+            'pretrained': kwargs.get("pretrained", False),
+            'drop_path_rate': kwargs.get("drop_path_rate", None),
+            'init_values': kwargs.get("init_values", None),
+            'dynamic_img_size': kwargs.get("dynamic_img_size", None),
+        }
+        num_classes = kwargs.get("num_classes", None)
+        if num_classes is not None and num_classes != 0:
+            timm_config['num_classes'] = num_classes
+        model = timm.create_model(**timm_config)
         model = ViTBase(model, **kwargs)
         
     return model

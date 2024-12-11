@@ -1,41 +1,7 @@
 experiment_name: compute_chinchilla
+base_config: compute_base.yaml
 
 data_filters:
-    set_filters:
-        dataset:
-            - imagenet
-            - ecoset
-        region:
-            - V1
-            - V2
-            - V4
-            - IT
-            - Behavioral
-
-
-    boolean_filters:
-        equals_false:
-            - is_pretrained
-            - is_random
-            - is_ssl
-            - is_adv
-            - is_ablation
-
-    group_by:
-        avg_score:
-            keys:
-                - model_id
-                - arch
-                - dataset
-                - flops
-                - n_params
-                - n_samples
-                - n_samples_seen
-                - total_flops
-                - arch_family
-                - samples_per_class
-            reduce:
-                score: mean
 
     arch_families_samples: # filter_arch_family_by_samples function parameters
         arch_family:

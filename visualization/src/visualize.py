@@ -19,7 +19,7 @@ def get_formula_text_univariate_double_saturation(a, b, c, d, X='C', x_scale_mul
         # return f"$S = {{{1-a:.2f}}} - {{{b:.2f}}}({X}+{10}^{{ {c:.2f} }})^{{ {d:.2f} }}$"
         return f"$S = {{{1-a:.2f}}} - {10}^{{{np.log10(b):.2f}}}({X}+{10}^{{ {c:.2f} }})^{{ {d:.2f} }}$"
 
-def plot_reg(X, params, L, ax, color, X_str='D', x_extend=1, x_scaler=1, linestyle='--', show_x_scaler=True, linewidth=4, legend='auto', alpha=0.5, marker=None, marker_size=0.5):
+def plot_reg(X, params, L, ax, color, invert_y:bool=True, X_str='D', x_extend=1, x_scaler=1, linestyle='--', show_x_scaler=True, linewidth=4, legend='auto', alpha=0.5, marker=None, marker_size=0.5):
     """
     Plots a regression line on the given axes.
     
@@ -55,7 +55,9 @@ def plot_reg(X, params, L, ax, color, X_str='D', x_extend=1, x_scaler=1, linesty
     else:
         raise ValueError("Invalid number of parameters")
     # print(formula)
-    sns.lineplot(x=x_pred*x_scaler, y=1-y_pred, linestyle=linestyle, label=formula, ax=ax, color=color, alpha=alpha, linewidth=linewidth , dashes='-.', legend=legend, marker=marker)
+    if invert_y:
+        y_pred = 1-y_pred
+    sns.lineplot(x=x_pred*x_scaler, y=y_pred, linestyle=linestyle, label=formula, ax=ax, color=color, alpha=alpha, linewidth=linewidth , dashes='-.', legend=legend, marker=marker)
     
 def get_formula_text_bivariate(E, A, alpha, B, beta, X_str='N', Y_str='D'):
     # print(E, A, alpha, B, beta)
@@ -81,7 +83,9 @@ def plot_reg_bivariate(scaling_coeffs, opt_params, L, ax, color, X_str='N', Y_st
         None
     """
     
-    compute = np.geomspace(5e13, 1e20, 1000) / (x1_scale_multiplier*x2_scale_multiplier)
+    compute = np.geomspace(1e14, 3e20, 1000)
+    compute = compute / (x1_scale_multiplier*x2_scale_multiplier)
+    # compute = np.geomspace(5e13, 1e20, 1000) / (x1_scale_multiplier*x2_scale_multiplier)
     a, b, G, m, n = scaling_coeffs
     X = np.power(compute/m, a/n) * G # N, params
     Y = np.power(compute/m, b/n) / G # D, samples

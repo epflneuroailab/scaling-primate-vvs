@@ -46,18 +46,8 @@ if __name__ == '__main__':
         artifact_dir.mkdir(parents=True, exist_ok=False)
         
     ### Additional computations
-    df_results['total_flops'] = df_results['flops'] * df_results['n_samples_seen']
-    
     
     #### Apply filters to the dataframe
-    # Exluude the following from the dataframe
-    # df = df_results[ ~df_results.is_pretrained & ~df_results.is_random & ~df_results.is_ablation & ~df_results.is_ssl & ~df_results.is_adv].copy()
-    # df = df[(df.arch_family.isin(['ConvNeXt', 'ConvNeXtFlex']))]
-    # df = df[df.dataset.isin(['imagenet', 'ecoset'])]
-    # df = df[
-    #     ~df.arch_family.isin(['ConvNeXt', 'ViT', 'ViTFlex', 'ConvNeXtFlex'])
-    #     | df.arch_family.isin(['ConvNeXt', 'ViT', 'ViTFlex', 'ConvNeXtFlex']) & df.samples_per_class.isin([300, 0])
-    # ]
     df = apply_filters(df_results, config['data_filters'])
     
     
@@ -85,7 +75,7 @@ if __name__ == '__main__':
     # with ThreadPoolExecutor(max_workers=8) as executor:
     
         ### Fit to original data
-        X_orig, Y_orig, initial_parameters = prepare_data_for_fitting(df, fitting_parameters, invert_Y=True)
+        X_orig, Y_orig, initial_parameters = prepare_data_for_fitting(df, fitting_parameters)
         output_path = output_dir / f'original_fit.csv'
         optimize_with_grid_search(
             X=X_orig, 
@@ -101,7 +91,7 @@ if __name__ == '__main__':
         )
         ### Perform bootstrapped curve fitting
         for idx, df_bootstrap in bootstrap_samples.items():
-            X_bootstrap, Y_bootstrap, initial_parameters = prepare_data_for_fitting(df_bootstrap, fitting_parameters, invert_Y=True)
+            X_bootstrap, Y_bootstrap, initial_parameters = prepare_data_for_fitting(df_bootstrap, fitting_parameters)
             # rng = np.random.default_rng(random_state)
             # sigma = 1e-1
             # noise = rng.normal(0, sigma, size=Y_bootstrap.shape)

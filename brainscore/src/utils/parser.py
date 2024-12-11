@@ -49,14 +49,15 @@ def create_argparser():
         "--num-classes",
         dest="num_classes",
         type=int,
-        default=1000,
+        # default=1000,
+        default=None,
         help="Number of classes of the model",
     )
     parser.add_argument(
         "--training-dataset",
         dest="training_dataset",
         type=str,
-        choices=["imagenet", "ecoset", "unknown", "webvision", "imagenet21kP", "webvisionP", "laion", "imagenet21kP-class-1000", "imagenet21kP-class-5000", "places365", "inaturalist"],
+        choices=["imagenet", "ecoset", "unknown", "webvision", "imagenet21kP", "webvisionP", "laion", "imagenet21kP-class-1000", "imagenet21kP-class-5000", "places365", "inaturalist", "infimnist"],
         default="imagenet",
         help="Training dataset",
     )
@@ -177,6 +178,14 @@ def create_argparser():
         help="Number of components to use for PCA or random projection",
     )
     parser.add_argument(
+        "--projection-type",
+        dest="projection_type",
+        type=str,
+        default='sparse',
+        choices=['sparse', 'gaussian'],
+        help="Projection type to use (default: sparse)",
+    )
+    parser.add_argument(
         "--append-layer-type",
         dest="append_layer_type",
         action="store_true",
@@ -210,6 +219,13 @@ def create_argparser():
         type=str,
         default=None,
         help='Model commitment to use (default: None)'
+    )
+    parser.add_argument(
+        "--commitment-file",
+        dest="commitment_file",
+        type=str,
+        default=None,
+        help='Model commitment file to use (default: None)'
     )
     parser.add_argument(
         "--benchmark-layer",

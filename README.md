@@ -1,6 +1,6 @@
 # Scaling Laws for Task-Optimized Models of the Primate Visual Ventral Stream
 
-[![arXiv](https://img.shields.io/badge/arXiv-2406.15109-b31b1b.svg)](https://arxiv.org/abs/2411.05712v1)
+[![arXiv](https://img.shields.io/badge/arXiv-2411.05712-b31b1b.svg)](https://arxiv.org/abs/2411.05712)
 
 This repository contains code, links to model checkpoints and benchmark results for our study on scaling laws in computational models of the primate visual system. We systematically evaluate over 600 models to understand how model size, dataset size, and compute resources impact alignment with brain function and behavior.
 

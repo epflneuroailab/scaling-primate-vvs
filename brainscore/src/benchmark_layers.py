@@ -125,7 +125,8 @@ def main(args):
             best_scores[region]['score'] = region_scores[best_layer]
         results['best_scores'] = best_scores
 
-    save_path.parent.mkdir(parents=True, exist_ok=True)
+    if not save_path.parent.exists():
+        save_path.parent.mkdir(parents=True, exist_ok=False)
     with open(save_path, "w") as f:
         json.dump(results, f, indent=2)
 

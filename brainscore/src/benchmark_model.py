@@ -60,15 +60,23 @@ def main(args):
         model_identifier = args.run_name.replace("_imagenet_full", "")
     elif args.use_open_clip:
         model_identifier = args.run_name
+    elif args.use_timm:
+        model_identifier = args.arch
     elif args.model_commitment:
         model_identifier =  args.model_commitment.split(':')[0]
     else:
         model_identifier = MODEL_IDENTIFIERS.get(args.arch, args.arch)
+        
+    if args.commitment_file:
+        with open(args.commitment_file, 'r') as f:
+            MODEL_COMMITMENTS_ = json.load(f)
+    else:
+        MODEL_COMMITMENTS_ = MODEL_COMMITMENTS
     
     print(f"Model identifier: {model_identifier}")
     if 'cornet_s' in model_identifier.lower():
         pass
-    elif model_identifier not in MODEL_COMMITMENTS:
+    elif model_identifier not in MODEL_COMMITMENTS_:
         raise ValueError(f"Model {model_identifier} not found in 'commitments.json'")
     
     model = create_model(**vars(args))
@@ -104,8 +112,8 @@ def main(args):
         transforms = model.preprocess
         # OpenCLIP models permute the axes, so we need to undo that
         postprocess_func = lambda x: x.permute(1, 0, 2)  # LND -> NLD
-        layers = MODEL_COMMITMENTS[model_identifier][training_dataset]['seed-0']['layers']
-        layers.append(MODEL_COMMITMENTS[model_identifier][training_dataset]['seed-0']['behavioral_readout_layer'])
+        layers = MODEL_COMMITMENTS_[model_identifier][training_dataset]['seed-0']['layers']
+        layers.append(MODEL_COMMITMENTS_[model_identifier][training_dataset]['seed-0']['behavioral_readout_layer'])
         print(layers)
         model = PostprocessWrapper(model, layers, postprocess_func, skip_layers=[layers[-1]], layer_names_modified=True)
         layers = model.layers_
@@ -114,7 +122,7 @@ def main(args):
     
     if args.model_commitment:
         _model_identifier, _training_dataset, _seed = args.model_commitment.split(':')
-        model_commitments = MODEL_COMMITMENTS[_model_identifier][_training_dataset]
+        model_commitments = MODEL_COMMITMENTS_[_model_identifier][_training_dataset]
         if f"seed-{seed}" not in model_commitments:
             print(f"Model commitment for seed-{_seed} not found, using seed-0")
             _seed = 0
@@ -123,7 +131,7 @@ def main(args):
         if 'cornet_s' in model_identifier.lower():
             model_commitment = None
         else:
-            model_commitments = MODEL_COMMITMENTS[model_identifier][training_dataset]
+            model_commitments = MODEL_COMMITMENTS_[model_identifier][training_dataset]
             if f"seed-{seed}" not in model_commitments:
                 print(f"Model commitment for seed-{seed} not found, using seed-0")
                 seed = 0
@@ -158,7 +166,8 @@ def main(args):
     logs["model_commitment"] = model_commitment
         
     save_path = Path(args.save_dir) / f"{args.run_name}{suffix}.json"
-    save_path.parent.mkdir(parents=True, exist_ok=True)
+    if not save_path.parent.exists():
+        save_path.parent.mkdir(parents=True, exist_ok=False)
     with open(save_path, "w") as f:
         json.dump(logs, f, indent=4)
         
@@ -187,7 +196,7 @@ if __name__ == "__main__":
             })
         parser.set_defaults(**cfg)
         
-    parser.set_defaults(save_dir='./outputs/benchmark_model')
+    parser.set_defaults(save_dir='./outputs/benchmark_results')
     args = parser.parse_args(remaining)
     print(args)
     main(args)

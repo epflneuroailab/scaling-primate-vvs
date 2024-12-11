@@ -1,0 +1,11 @@
+experiment_name: simclr_it
+base_config: simclr_scaling.yaml
+
+data_filters:
+    set_filters:
+        region:
+            - IT
+
+
+experiment_description: >
+    ""

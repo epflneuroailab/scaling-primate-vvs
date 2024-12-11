@@ -84,7 +84,11 @@ def create_model(**kwargs):
             # ViT models from timm
             model = create_vit_model(**kwargs)
         else:
-            model = timm.create_model(arch, pretrained=pretrained, num_classes=kwargs["num_classes"])
+            timm_config = {'model_name': arch.replace(':', '.'), 'pretrained': pretrained}
+            num_classes = kwargs.get("num_classes", None)
+            if num_classes is not None and num_classes != 0:
+                timm_config['num_classes'] = num_classes
+            model = timm.create_model(**timm_config)
             model = ClassifierBase(model, **kwargs)
     elif use_open_clip:
         model, _, preprocess = open_clip.create_model_and_transforms(arch, pretrained=checkpoint)

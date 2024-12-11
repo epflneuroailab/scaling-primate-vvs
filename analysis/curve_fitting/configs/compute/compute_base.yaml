@@ -28,6 +28,8 @@ data_filters:
                 - total_flops
                 - arch_family
                 - samples_per_class
+                - acc
+                - n_epochs
             reduce:
                 score: mean
 

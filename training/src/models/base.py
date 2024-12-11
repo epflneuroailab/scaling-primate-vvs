@@ -12,7 +12,7 @@ class ClassifierBase(ComposerClassifier):
     def __init__(
         self,
         module,
-        num_classes=1000,
+        num_classes=None,
         train_metrics=None,
         val_metrics=None,
         loss_fn=None,
@@ -20,9 +20,10 @@ class ClassifierBase(ComposerClassifier):
     ):
         if not val_metrics:
             val_metrics = {}
-            val_metrics["MulticlassAccuracy"] = torchmetrics.classification.MulticlassAccuracy(
-                num_classes=num_classes, average="micro"
-            )
+            if num_classes:
+                val_metrics["MulticlassAccuracy"] = torchmetrics.classification.MulticlassAccuracy(
+                    num_classes=num_classes, average="micro"
+                )
             if isinstance(loss_fn, nn.CrossEntropyLoss) or loss_fn is None:
                 val_metrics["CrossEntropyLoss"] = CrossEntropy()
             elif isinstance(loss_fn, LabelSmoothingCrossEntropy):
@@ -39,8 +40,9 @@ class ClassifierBase(ComposerClassifier):
         val_metrics = MetricCollection(val_metrics)
         if not loss_fn:
             loss_fn = nn.CrossEntropyLoss()
-
-        super().__init__(module, num_classes, train_metrics, val_metrics, loss_fn)
+        num_classes_ = num_classes if (num_classes is not None and num_classes>0) else 1000
+        module.num_classes = num_classes_
+        super().__init__(module, num_classes_, train_metrics, val_metrics, loss_fn)
 
     def get_metrics(self, is_train=False):
         return {} if is_train else self.val_metrics

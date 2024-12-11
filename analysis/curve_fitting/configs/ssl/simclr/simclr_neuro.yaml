@@ -1,0 +1,30 @@
+experiment_name: simclr_neuro
+base_config: simclr_scaling.yaml
+
+data_filters:
+    set_filters:
+        region:
+            - V1
+            - V2
+            - V4
+            - IT
+
+    group_by:
+        avg_score:
+            keys:
+                - model_id
+                - arch
+                - dataset
+                - flops
+                - n_params
+                - n_samples
+                - n_samples_seen
+                - total_flops
+                - arch_family
+                - samples_per_class
+            reduce:
+                score: mean
+
+
+experiment_description: >
+    ""

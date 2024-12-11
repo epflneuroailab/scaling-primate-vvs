@@ -85,7 +85,8 @@ def main(args):
     }
 
     save_path = Path(args.save_dir) / f"{args.run_name}.json"
-    save_path.parent.mkdir(parents=True, exist_ok=True)
+    if not save_path.parent.exists():
+        save_path.parent.mkdir(parents=True, exist_ok=False)
     with open(save_path, "w") as f:
         json.dump(results, f, indent=4)
         

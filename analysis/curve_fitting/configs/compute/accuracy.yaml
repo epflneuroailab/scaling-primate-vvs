@@ -1,0 +1,24 @@
+experiment_name: compute_accuracy
+base_config: compute_base.yaml
+
+data_filters:
+
+    combine_arch_families: True
+
+
+# fitting_parameters:
+
+
+
+fitting_parameters:
+    Y: acc
+    invert_Y: False
+#     loss_function: power_law_shift_LSE
+#     initial_parameters:
+#         lambda_: [0, 0.5, 1, 1.5, 2]
+
+# visualization:
+#     loss_function: power_law_shift
+
+experiment_description: >
+    ""

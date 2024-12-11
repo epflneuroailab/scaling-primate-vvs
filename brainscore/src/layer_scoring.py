@@ -1,9 +1,9 @@
-import functools
-import argparse
+
 import json
 from pathlib import Path
 import sys
 import os
+
 from tqdm.auto import tqdm
 import torch
 import timm
@@ -50,9 +50,25 @@ def main(args):
 
 
         
-    model_identifier = f"{args.run_name}_nc-{args.n_compression_components}_{args.layer_type}"
+    model_identifier = f"{args.run_name}_nc-{args.n_compression_components}_{args.layer_type}_seed-{args.seed}"
     
-    layers = get_layers(model, layer_type=args.layer_type)
+    layer_type=args.layer_type
+    if ':' in layer_type:
+        layer_type, part_id, num_parts = layer_type.split(':')
+        part_id, num_parts = int(part_id), int(num_parts)
+        assert part_id <= num_parts, "Invalid partition"
+        assert 0 < part_id, "Invalid partition"
+        assert num_parts > 0, "Invalid partition"
+    else:
+        part_id = None
+        num_parts = None
+    args.layers_num_parts = num_parts
+    args.layers_part_id = part_id
+    
+    layers = get_layers(model, layer_type=layer_type, num_parts=num_parts, part_id=part_id-1, sort=True)
+    if num_parts is not None:
+        args.suffix = f"{part_id}:{num_parts}_{args.suffix}"
+        
     # layers = ['trunk.blocks.2.mlp.act']
     print(layers)
     
@@ -67,7 +83,7 @@ def main(args):
         transforms = model.preprocess
     else:
         transforms = None
-        
+    
     activations_model = wrap_model(
         model_identifier, 
         model, 
@@ -87,7 +103,13 @@ def main(args):
     if args.enable_random_projection:
         random_projection_hooked = LayerRandomProjection.is_hooked(layer_scoring._activations_model)
         if not random_projection_hooked:
-            random_projection_handle = LayerRandomProjection.hook(layer_scoring._activations_model, n_components=args.n_compression_components, projection_type='sparse')
+            projection_type = getattr(args, 'projection_type', 'sparse')
+            random_projection_handle = LayerRandomProjection.hook(
+                layer_scoring._activations_model, 
+                n_components=args.n_compression_components, 
+                projection_type=projection_type, 
+                random_state=args.seed
+                )
 
     best_scores = {}
     for region, benchmark in tqdm(STANDARD_REGION_BENCHMARKS.items(), desc="Processing regions"):
@@ -100,7 +122,7 @@ def main(args):
         # best_layer = sorted(layer_scores.items(), key= lambda x: x[1][0], reverse=True)
         best_layer = sorted(layer_scores.items(), key= lambda x: x[1], reverse=True)
         best_scores[region] = best_layer[0]
-        
+                
     if args.output_method == 'combined':
         results = {
             'region2Layer': best_scores,
@@ -109,11 +131,16 @@ def main(args):
             'config': vars(args), 
         }
 
+        suffix = f"layer-scores_{args.suffix}" if args.suffix else "layer-scores"
         if args.append_layer_type:
-            save_path = Path(args.save_dir) / f"{args.run_name}_{args.layer_type}_layer-scores.json"
+            save_path = Path(args.save_dir) / f"{args.run_name}_{layer_type}_{suffix}"
         else:
-            save_path = Path(args.save_dir) / f"{args.run_name}_layer-scores.json"
-        save_path.parent.mkdir(parents=True, exist_ok=True)
+            save_path = Path(args.save_dir) / f"{args.run_name}_{suffix}"
+        save_path = save_path.with_suffix(".json")
+        if not save_path.parent.exists():
+            save_path.parent.mkdir(parents=True, exist_ok=False)
+            
+        print(f"Saving layer selection to {save_path}")
         with open(save_path, "w") as f:
             json.dump(results, f, indent=2)
 
@@ -126,7 +153,10 @@ def main(args):
                 'scores': {region: {layer: scores[region][layer]} for region in scores},
                 'layers': [layer],
             }
-            save_path = Path(args.save_dir) / f"{args.run_name}_{layer}_layer-scores.json"
+            suffix = f"layer-scores_{args.suffix}" if args.suffix else "layer-scores"
+            save_path = Path(args.save_dir) / f"{args.run_name}_{layer}_{suffix}"
+            save_path = save_path.with_suffix(".json")
+            
             if not save_path.parent.exists():
                 save_path.parent.mkdir(parents=True, exist_ok=False)
             with open(save_path, "w") as f:

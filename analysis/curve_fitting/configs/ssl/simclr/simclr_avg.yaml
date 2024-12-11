@@ -1,0 +1,23 @@
+experiment_name: simclr_avg
+base_config: simclr_scaling.yaml
+
+data_filters:
+    group_by:
+        avg_score:
+            keys:
+                - model_id
+                - arch
+                - dataset
+                - flops
+                - n_params
+                - n_samples
+                - n_samples_seen
+                - total_flops
+                - arch_family
+                - samples_per_class
+            reduce:
+                score: mean
+
+
+experiment_description: >
+    ""

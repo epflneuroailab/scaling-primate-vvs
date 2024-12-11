@@ -1,11 +1,12 @@
 import pprint
 
+import numpy as np
 import torch.nn as nn
 import torchvision.models as M
 import timm.models as TM
 import timm.layers as L
 
-def get_layers(model, layer_type='all', sort=False, verbose=False):
+def get_layers(model, layer_type='all', num_parts:int=None, part_id:int=None, sort=False, verbose=False):
     layers = set()
     known_types = {
         'conv': (nn.Conv2d,),
@@ -22,9 +23,12 @@ def get_layers(model, layer_type='all', sort=False, verbose=False):
         'hardswish': (nn.Hardswish,),
         'gelutanh': (L.activations.GELUTanh,),
         'sequential': (nn.Sequential,),
-        'cnblock': (M.convnext.CNBlock,),
+        'cnblock': (M.convnext.CNBlock, TM.convnext.ConvNeXtBlock),
+        'cnstage': (TM.convnext.ConvNeXtStage,),
+        'vtblock': (TM.vision_transformer.Block,),
+        'ls': (TM.vision_transformer.LayerScale,),
         'attn': (TM.vision_transformer.Attention, TM.convit.GPSA),
-        'mlp': (L.mlp.Mlp, L.mlp.GlobalResponseNormMlp),
+        'mlp': (L.mlp.Mlp, L.mlp.GlobalResponseNormMlp, L.mlp.GluMlp),
         'grn': (L.mlp.GlobalResponseNorm,),
         'davit': (TM.davit.ConvPosEnc, TM.davit.ChannelBlock, TM.davit.SpatialBlock, TM.davit.WindowAttention, TM.davit.ChannelAttention )
         }
@@ -69,6 +73,11 @@ def get_layers(model, layer_type='all', sort=False, verbose=False):
     layers = list(layers)
     if sort:
         layers = sorted(layers)
+    
+    if num_parts is not None and part_id is not None:
+        layers = np.array_split(layers, num_parts)[part_id]
+        layers = layers.tolist()
+        
     return layers
 
             

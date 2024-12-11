@@ -79,6 +79,8 @@ def main(args):
         assert args.num_classes == 365, "num_classes must be 365 for places365"
     elif args.dataset == "inaturalist":
         assert args.num_classes == 10000, "num_classes must be 10000 for inaturalist"
+    elif args.dataset == "infimnist":
+        assert args.num_classes == 10, "num_classes must be 10 for infimnist"
     
     if args.target_batch_size is not None:
         # Composer.Trainer copies the dataloader across gpus

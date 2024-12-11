@@ -55,6 +55,8 @@ def combine_arch_family(df: pd.DataFrame, arch_family_map:Dict[str, str]) -> pd.
 
 def apply_filters(df: pd.DataFrame, filters: dict) -> pd.DataFrame:
     
+    df = df.copy()
+    
     # Combine architecture families
     combine_arch_families = filters.get('combine_arch_families', False)
     if combine_arch_families:
@@ -104,6 +106,12 @@ def apply_filters(df: pd.DataFrame, filters: dict) -> pd.DataFrame:
     arch_families_n_samples = filters.get('arch_families_samples', {})
     if arch_families_n_samples:
         df = filter_arch_family_by_samples(df, **arch_families_n_samples)
+        
+        
+    # Apply modifiers
+    modifiers = filters.get('modifiers', {})
+    flops_multiplier = modifiers.get('flops_multiplier', 1.0)
+    df['total_flops'] = flops_multiplier * df['total_flops']
 
 
     

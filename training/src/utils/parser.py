@@ -174,7 +174,7 @@ def create_argparser():
         "--dataset",
         default="imagenet",
         type=str,
-        choices=["imagenet", "ecoset", "webvision", "imagenet21k", "imagenet21kP", "webvisionP", "places365", "inaturalist"],
+        choices=["imagenet", "ecoset", "webvision", "imagenet21k", "imagenet21kP", "webvisionP", "places365", "inaturalist", "infimnist"],
         metavar="DATASET",
         help="dataset to use (default: imagenet)",
     )

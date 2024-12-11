@@ -62,6 +62,22 @@ def create_dataloaders(**kwargs):
         ])
         ds_train = torchvision.datasets.MNIST(root, train=True, transform=transform, download=True)
         ds_eval = torchvision.datasets.MNIST(root, train=False, transform=transform, download=True)
+    elif dataset == "infimnist":
+        # imageFolder = ImageFolder
+        # transform_train = T.Compose([
+        #     T.RandomResizedCrop(kwargs['train_crop_size'], interpolation=2),
+        #     T.RandomHorizontalFlip(),
+        #     T.ToTensor(),
+        #     T.Normalize(mean=[0.0070611]*3, std=[0.08373316]*3),
+        # ])
+        # transform_val = T.Compose([
+        #     T.Resize(kwargs['val_resize_size'], interpolation=2),
+        #     T.CenterCrop(kwargs['val_crop_size']),
+        #     T.ToTensor(),
+        #     T.Normalize(mean=[0.0070611]*3, std=[0.08373316]*3),
+        # ])
+        ds_train = imageFolder(root / "train", transform=transform_train)
+        ds_eval = imageFolder(root / "val", transform=transform_val)
     elif dataset == "cifar10":
         transform_train = T.Compose([
             # T.HFlip(),

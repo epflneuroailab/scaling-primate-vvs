@@ -1,0 +1,11 @@
+experiment_name: simclr_behavior
+base_config: simclr_scaling.yaml
+
+data_filters:
+    set_filters:
+        region:
+            - Behavioral
+
+
+experiment_description: >
+    ""

@@ -1,0 +1,17 @@
+experiment_name: simclr_scaling
+base_config: ../ssl_base.yaml
+
+data_filters:
+    set_filters:
+        dataset:
+            - imagenet
+        arch_family:
+            - ResNet
+        ssl_method:
+            - simclr
+
+    modifiers:
+        flops_multiplier: 1
+
+experiment_description: >
+    ""

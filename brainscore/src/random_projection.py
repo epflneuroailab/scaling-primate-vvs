@@ -2,7 +2,7 @@ import logging
 import numpy as np
 import os
 from result_caching import store_dict
-from typing import Dict, Literal
+from typing import Dict, Literal, Union
 from sklearn import random_projection
 from copy import deepcopy
 
@@ -15,28 +15,35 @@ class LayerRandomProjection:
         self, 
         activations_extractor, 
         n_components, 
-        projection_type:Literal['gaussian', 'sparse']='gaussian',
+        projection_type:Literal['gaussian', 'sparse']='sparse',
         epsilon=1e-1,
         density:float | Literal['auto'] = "auto",
+        random_state: Union[int, np.random.RandomState] = 0
     ):
         
         self._logger = logging.getLogger(fullname(self))
         self._extractor = activations_extractor
         self._n_components = n_components
         self._projection_type = projection_type
+        self._epsilon = epsilon
+        self._density = density
+        self._random_state = random_state
         self._layer_transformers = {}
+        print(f"Random State of LayerRandomProjection: {random_state}")
+        
 
         if self._projection_type == 'gaussian':
             self._transformer = random_projection.GaussianRandomProjection(
                 n_components=self._n_components,
-                random_state=0    
+                random_state=self._random_state
             )
         elif self._projection_type == 'sparse':
             self._transformer = random_projection.SparseRandomProjection(
                 n_components=self._n_components,
-                density=density,
-                eps=epsilon,
-                random_state=0
+                density=self._density,
+                dense_output=True,
+                eps=self._epsilon,
+                random_state=self._random_state
             )
         else:
             raise ValueError('Invalid projection type')
@@ -64,23 +71,27 @@ class LayerRandomProjection:
             identifier=self._extractor.identifier,
             layers=list(missing_layer_activations.keys()),
             missing_layer_activations=missing_layer_activations,
-            n_components=self._n_components
+            n_components=self._n_components,
+            random_state=self._random_state
         )
         self._layer_transformers = {**self._layer_transformers, **layer_transformers}
 
     @store_dict(dict_key='layers', identifier_ignore=['layers', 'missing_layer_activations'])
-    def _transformers(self, identifier, layers, missing_layer_activations, n_components):
+    def _transformers(self, identifier, layers, missing_layer_activations, n_components, random_state):
         # if n_components is None:
         #     n_components = self._n_components
         def init_and_progress(layer, activations):
             activations = flatten(activations)
             if activations.shape[1] <= n_components:
-                self._logger.debug(f"Not computing a random projection for {layer} "
-                                   f"activations {activations.shape} as shape is small enough already")
+                log = f"Not computing a random projection for {layer} " \
+                        f"activations {activations.shape} as shape is small enough already"
+                self._logger.debug(log)
+                print(log)
                 transformer = None
             else:
                 transformer = deepcopy(self._transformer)
                 transformer.fit(activations)
+                # print(np.where(transformer.components_.toarray())[1])
             return transformer
 
         layer_transformers = change_dict(missing_layer_activations, init_and_progress, keep_name=True,
@@ -88,8 +99,8 @@ class LayerRandomProjection:
         return layer_transformers
 
     @classmethod
-    def hook(cls, activations_extractor, n_components, projection_type:Literal['gaussian', 'sparse']='gaussian'):
-        hook = LayerRandomProjection(activations_extractor=activations_extractor, n_components=n_components, projection_type=projection_type)
+    def hook(cls, activations_extractor, n_components, projection_type:Literal['gaussian', 'sparse']='gaussian', random_state:Union[int, np.random.RandomState]=0):
+        hook = LayerRandomProjection(activations_extractor=activations_extractor, n_components=n_components, projection_type=projection_type, random_state=random_state)
         assert not cls.is_hooked(activations_extractor), "Random projection already hooked"
         handle = activations_extractor.register_batch_activations_hook(hook)
         hook.handle = handle
