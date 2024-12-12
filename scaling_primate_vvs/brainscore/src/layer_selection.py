@@ -17,7 +17,7 @@ from brainscore_vision.model_helpers.brain_transformation import (
 if '../' not in sys.path:
     sys.path.append('../')
 
-from training import create_model
+from scaling_primate_vvs.training import create_model
 
 from .utils import get_layers, wrap_model, create_argparser, PostprocessWrapper
 from .config import BENCHMARKS, MODEL_IDENTIFIERS

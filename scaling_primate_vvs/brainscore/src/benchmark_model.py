@@ -15,7 +15,7 @@ from brainscore_vision import load_benchmark
 if '../' not in sys.path:
     sys.path.append('../')
 
-from training import create_model
+from scaling_primate_vvs.training import create_model
 from .utils import wrap_model, create_argparser, PostprocessWrapper, postprocess_score
 from .config import BENCHMARKS, BENCHMARKS_IDENTIFIERS, MODEL_IDENTIFIERS, MODEL_COMMITMENTS, ABLATION
 

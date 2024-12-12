@@ -15,7 +15,7 @@ from brainscore_vision.model_helpers.brain_transformation import ModelCommitment
 if '../' not in sys.path:
     sys.path.append('../')
 
-from training import create_model
+from scaling_primate_vvs.training import create_model
 from .utils import get_layers, wrap_model, create_argparser, postprocess_score
 from .config import BENCHMARKS
 
