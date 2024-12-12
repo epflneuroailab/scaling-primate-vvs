@@ -64,7 +64,7 @@ except FileNotFoundError:
     logging.warning("No `model_checkpoints.csv` file found in the `scaling_primate_vvs/artifacts` directory.")
 
 
-def list_models(supported_simple_loading:True) -> List[str]:
+def list_models(supported_simple_loading:bool = True) -> List[str]:
     """
     Retrieve a list of available model IDs from the model checkpoints dataframe.
     
@@ -75,12 +75,14 @@ def list_models(supported_simple_loading:True) -> List[str]:
     Returns:
         List[str]: A list of model IDs. Returns an empty list if the model checkpoints file is not found.
     """
+    if DF_MODELS is None:
+        print("`model_checkpoints.csv` file not found.")
+        return []
     if supported_simple_loading:
-        return SUPPORTED_MODELS
+        df = DF_MODELS[DF_MODELS['arch'].isin(SUPPORTED_MODELS)]
+        return df['model_id'].tolist()
+    
     else:
-        if DF_MODELS is None:
-            print("`model_checkpoints.csv` file not found.")
-            return []
         return DF_MODELS['model_id'].tolist()
 
 
