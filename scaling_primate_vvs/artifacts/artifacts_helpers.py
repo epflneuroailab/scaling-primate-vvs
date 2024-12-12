@@ -187,7 +187,7 @@ def load_model(model_id: str, checkpoints_dir: Optional[str] = None) -> Composer
     assert DF_RESULTS is not None, "No `benchmark_scores.csv` file found."
 
     # Retrieve model information from the dataframe
-    model_info = DF_MODELS[DF_MODELS['model_id'] == model_id].iloc[0]
+    model_info = DF_RESULTS[DF_RESULTS['model_id'] == model_id].iloc[0]
     arch = model_info['arch']
 
     # Check if the architecture is supported
