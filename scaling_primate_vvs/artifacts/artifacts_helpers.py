@@ -220,6 +220,7 @@ def load_model(model_id: str, checkpoints_dir: Optional[str] = None) -> Composer
     if checkpoints_dir is not None:
         checkpoint_info = DF_MODELS[DF_MODELS['model_id'] == model_id].iloc[0]
         checkpoint = Path(checkpoints_dir) / checkpoint_info['checkpoint_path']
+        checkpoint = str(checkpoint)
     else:
         checkpoint = model_info['checkpoint_url']
 
