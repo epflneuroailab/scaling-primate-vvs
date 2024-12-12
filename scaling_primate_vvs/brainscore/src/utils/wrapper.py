@@ -14,7 +14,7 @@ from brainscore_vision.model_helpers.brain_transformation import ModelCommitment
 if '../' not in sys.path:
     sys.path.append('../')
 
-from training.src.dataloaders.transforms import create_transforms_albumentations
+from scaling_primate_vvs.training.src.dataloaders.transforms import create_transforms_albumentations
 
 
 

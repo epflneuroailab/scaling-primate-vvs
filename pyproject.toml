@@ -58,7 +58,16 @@ dev = [
     "black",
     "flake8"
 ]
+
+# Install brainscore_vision for the evaluation of the models
+# Since brainscore_vision requires importlib_metadate<5 and composer requires importlib_metadata>=5
+# The following fork of brainscore_vision dependency is removed
+# It might lead unexpected behavior hence use with caution
+# PS the forked repo might be outdated in the future
 brainscore = ["brainscore_vision @ git+https://github.com/akgokce/brainscore_vision.git"]
+
+# Following dependencies are required for the training of the models
+# in self-supervised and adversarial settings
 training = [
     "lightly", #~=1.5.1
     "torchattacks", #~=3.5.1
