@@ -70,35 +70,47 @@ Follow these steps to install the `scaling_primate_vvs` package:
 
 1. Ensure that you have Python 3.11 or later installed on your system.
 
-2. Clone the repository:
-   ```
-   git clone https://github.com/your-repo-url/scaling_primate_vvs.git
-   cd scaling_primate_vvs
-   ```
+2. Install the package using one of the following methods:
 
-3. Install the package using one of the following methods:
-
-   a. Basic installation:
+      2.1. Install directly from the GitHub repository:
+      ```bash
+      pip install git+https://github.com/epflneuroailab/scaling-primate-vvs.git
       ```
+
+      2.2. Clone the repository:
+
+      ```bash
+      git clone https://github.com/epflneuroailab/scaling-primate-vvs.git
+      cd scaling_primate_vvs
+      ```
+
+      Install the package using one of the following methods:
+
+      a. Basic installation:
+
+      ```bash
       pip install .
       ```
 
-   b. Installation with `brainscore_vision` dependencies:
-      ```
+      b. Installation with `brainscore_vision` dependencies:
+
+      ```bash
       pip install ".[brainscore]"
       ```
 
-   c. Installation with training dependencies:
-      ```
+      c. Installation with training dependencies:
+
+      ```bash
       pip install ".[training]"
       ```
 
-   d. Installation with all dependencies:
-      ```
+      d. Installation with all dependencies:
+
+      ```bash
       pip install ".[all]"
       ```
 
-4. Verify the installation by running the following command:
+3. Verify the installation by running the following command:
    ```
    python -c "import scaling_primate_vvs"
    ```
