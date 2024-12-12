@@ -77,6 +77,8 @@ Follow these steps to install the `scaling_primate_vvs` package:
       pip install git+https://github.com/epflneuroailab/scaling-primate-vvs.git
       ```
 
+      Note that this method does not install the several package dependencies, such as `brainscore_vision`. Make sure to install these dependencies manually if required.
+
       2.2. Clone the repository:
 
       ```bash
