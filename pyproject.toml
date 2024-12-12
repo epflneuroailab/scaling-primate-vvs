@@ -1,0 +1,75 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+
+[project]
+name = "scaling_primate_vvs"
+version = "0.1.0"
+description = "Scaling Laws for Task-Optimized Models of the Primate Visual Ventral Stream"
+readme = "README.md"
+authors = [
+    { name = "Abdulkadir Gokce", email = "abdulkadir.gokce@epfl.ch" }
+]
+license = { file = "LICENSE" }
+keywords = ["scaling laws", "visual ventral stream", "machine learning"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.11"
+dependencies = [
+    "hatchling",
+    "torch~=2.2.1",
+    "composer~=0.20.1",
+    "torchvision~=0.17.1",
+    "torchmetrics~=1.3.1",
+    "albumentations~=1.4.1",
+    "timm~=0.9.16",
+    "huggingface_hub~=0.19.4",
+    "open-clip-torch~=2.23.0",
+    "python-dotenv~=1.0.1",
+    "lightly", #~=1.5.1
+    "torchattacks", #~=3.5.1
+    "tqdm",
+    "seaborn",
+    "jupyter",
+    "ipykernel",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "LICENSE",
+    "README.md", 
+    "scaling_primate_vvs/artifacts/*",
+    "scaling_primate_vvs/analysis/curve_fitting/configs/*",
+    "scaling_primate_vvs/training/cfgs/*",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+    "flake8"
+]
+
+# Install brainscore_vision for the evaluation of the models
+# Since brainscore_vision requires importlib_metadate<5 and composer requires importlib_metadata>=5
+# The following fork of brainscore_vision dependency is removed
+# It might lead unexpected behavior hence use with caution
+# PS the forked repo might be outdated in the future
+brainscore = ["brainscore_vision @ git+https://github.com/akgokce/brainscore_vision.git"]
+
+# Following dependencies are required for the training of the models
+# in self-supervised and adversarial settings
+training = [
+    "lightly", #~=1.5.1
+    "torchattacks", #~=3.5.1
+]
+all = ["scaling_primate_vvs[brainscore,training,dev]"]
