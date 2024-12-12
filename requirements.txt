@@ -1,4 +1,4 @@
-# brainscore_vision @ git+https://github.com/brain-score/vision.git@2ff306d
+brainscore_vision @ git+https://github.com/akgokce/brainscore_vision.git
 torch~=2.2.1
 composer~=0.20.1
 torchvision~=0.17.1
@@ -8,7 +8,9 @@ timm~=0.9.16
 huggingface_hub~=0.19.4
 open-clip-torch~=2.23.0
 python-dotenv~=1.0.1
+tqdm
+seaborn
 jupyter
 ipykernel
-# lightly~=1.5.1
-# torchattacks~=3.5.1
+lightly #~=1.5.1
+torchattacks #~=3.5.1
