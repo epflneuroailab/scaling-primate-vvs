@@ -17,9 +17,9 @@ artifact_dir = Path(__file__).parent
 # List of supported model architectures
 SUPPORTED_MODELS: List[str] = []
 SUPPORTED_MODELS += [f'resnet{k}' for k in [18, 34, 50, 101, 152]]
-SUPPORTED_MODELS += [f'efficient_b{k}' for k in [0, 1, 2]]
-SUPPORTED_MODELS += [f'convnext_{k}' for k in ['tiny', 'small', 'medium', 'large']]
-SUPPORTED_MODELS += [f'deit_{k}' for k in ['tiny', 'small', 'medium', 'large']]
+SUPPORTED_MODELS += [f'efficientnet_b{k}' for k in [0, 1, 2]]
+SUPPORTED_MODELS += [f'convnext_{k}' for k in ['tiny', 'base', 'medium', 'large']]
+SUPPORTED_MODELS += [f'deit_{k}' for k in ['tiny', 'base', 'medium', 'large']]
 SUPPORTED_MODELS += ['alexnet', 'cornet_s']
 
 # Directory containing training configuration YAML files
@@ -80,10 +80,10 @@ def list_models(supported_simple_loading:bool = True) -> List[str]:
         return []
     if supported_simple_loading:
         df = DF_MODELS[DF_MODELS['arch'].isin(SUPPORTED_MODELS)]
-        return df['model_id'].tolist()
+        return df['model_id'].unique().tolist()
     
     else:
-        return DF_MODELS['model_id'].tolist()
+        return DF_MODELS['model_id'].unique().tolist()
 
 
 def get_model_checkpoints_dataframe() -> Optional[pd.DataFrame]:
@@ -258,6 +258,14 @@ def load_brain_model(model_id: str, checkpoints_dir: Optional[str] = None) -> Mo
     """
     # Load the base model using the load_model function
     model = load_model(model_id, checkpoints_dir)
+    
+    # Unwrap the model to access the underlying model
+    if hasattr(model, "module"):
+        model = model.module
+    elif hasattr(model, "model"):
+        model = model.model
+    else:
+        raise ValueError("Model cannot be unwrapped.")
 
     # Define the directory containing brainscore artifacts
     brainscore_artifacts_dir = Path(__file__).parent.parent / 'brainscore/artifacts'
