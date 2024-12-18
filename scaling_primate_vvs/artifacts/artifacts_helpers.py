@@ -18,8 +18,8 @@ artifact_dir = Path(__file__).parent
 SUPPORTED_MODELS: List[str] = []
 SUPPORTED_MODELS += [f'resnet{k}' for k in [18, 34, 50, 101, 152]]
 SUPPORTED_MODELS += [f'efficientnet_b{k}' for k in [0, 1, 2]]
-SUPPORTED_MODELS += [f'convnext_{k}' for k in ['tiny', 'base', 'medium', 'large']]
-SUPPORTED_MODELS += [f'deit_{k}' for k in ['tiny', 'base', 'medium', 'large']]
+SUPPORTED_MODELS += [f'convnext_{k}' for k in ['tiny', 'small', 'base', 'large']]
+SUPPORTED_MODELS += [f'deit_{k}' for k in ['tiny', 'small', 'base', 'large']]
 SUPPORTED_MODELS += ['alexnet', 'cornet_s']
 
 # Directory containing training configuration YAML files
@@ -31,13 +31,13 @@ MODEL_CONFIGS.update({
     f'resnet{k}': training_configs_dir / 'resnet' / f'resnet{k}.yaml' for k in [18, 34, 50, 101, 152]
 })
 MODEL_CONFIGS.update({
-    f'efficient_b{k}': training_configs_dir / 'efficientnet' / f'efficientnet_b{k}.yaml' for k in [0, 1, 2]
+    f'efficientnet_b{k}': training_configs_dir / 'efficientnet' / f'efficientnet_b{k}.yaml' for k in [0, 1, 2]
 })
 MODEL_CONFIGS.update({
-    f'convnext_{k}': training_configs_dir / 'convnext' / f'convnext_{k}.yaml' for k in ['tiny', 'small', 'medium', 'large']
+    f'convnext_{k}': training_configs_dir / 'convnext' / f'convnext_{k}.yaml' for k in ['tiny', 'small', 'base', 'large']
 })
 MODEL_CONFIGS.update({
-    f'deit_{k}': training_configs_dir / 'deit' / f'deit_{k}.yaml' for k in ['tiny', 'small', 'medium', 'large']
+    f'deit_{k}': training_configs_dir / 'deit' / f'deit_{k}.yaml' for k in ['tiny', 'small', 'base', 'large']
 })
 MODEL_CONFIGS.update({
     'alexnet': training_configs_dir / 'others' / 'alexnet.yaml',
@@ -46,7 +46,17 @@ MODEL_CONFIGS.update({
 
 # Mapping from original model names to their corresponding names in the configuration
 NAME_MAPPING: Dict[str, str] = {
-    f'deit_{k}': f'deit3_{k}_patch16_224' for k in ['tiny', 'small', 'medium', 'large']
+    f'deit_{k}': f'deit3_{k}_patch16_224' for k in ['tiny', 'small', 'base', 'large']
+}
+
+DATASET_CLASSES = {
+    'imagenet': 1000,
+    'ecoset': 565,
+    'imagenet21kP': 10450,
+    'webvisionP': 4186,
+    'places365': 365,
+    'inaturalist': 10000,
+    'infimnist': 10
 }
 
 # Attempt to load benchmark results from CSV; log a warning if the file is not found
@@ -235,6 +245,11 @@ def load_model(model_id: str, checkpoints_dir: Optional[str] = None) -> Composer
 
     # Add the checkpoint path to the configuration
     training_config['checkpoint'] = checkpoint
+
+    # Add the number of classes for the dataset to the configuration
+    dataset = model_info['dataset']
+    num_classes = DATASET_CLASSES.get(dataset, 1000)
+    training_config['num_classes'] = num_classes
 
     # Create and return the ComposerModel instance
     model = create_model(**training_config)
