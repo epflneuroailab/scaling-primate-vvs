@@ -83,7 +83,7 @@ def wrap_brain_model(
         activations_model = activations_model,
         layers = model_commitment.get('layers', None),
         behavioral_readout_layer = model_commitment.get('behavioral_readout_layer', None),
-        region_layer_map = model_commitment.get('region_layer_map', None),
+        region_layer_map = model_commitment.get('region2layer', None),
     )
     
     
