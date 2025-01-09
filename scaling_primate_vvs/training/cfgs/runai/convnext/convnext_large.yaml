@@ -1,4 +1,4 @@
-defaults: defaults.yaml
+defaults: cfgs/runai/convnext/defaults.yaml
 
 # Model
 arch: convnext_large

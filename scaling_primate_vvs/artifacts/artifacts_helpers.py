@@ -237,7 +237,8 @@ def load_model(model_id: str, checkpoints_dir: Optional[str] = None) -> Composer
 
     # Determine the checkpoint path
     if checkpoints_dir is not None:
-        checkpoint_info = DF_MODELS[DF_MODELS['model_id'] == model_id].iloc[0]
+        checkpoint_info = DF_MODELS[DF_MODELS['model_id'] == model_id]
+        checkpoint_info = checkpoint_info.sort_values('epoch', ascending=False).iloc[0]
         checkpoint = Path(checkpoints_dir) / checkpoint_info['checkpoint_path']
         checkpoint = str(checkpoint)
     else:
@@ -300,8 +301,19 @@ def load_brain_model(model_id: str, checkpoints_dir: Optional[str] = None) -> Mo
     model_info = DF_RESULTS[DF_RESULTS['model_id'] == model_id].iloc[0]
     arch = model_info['arch']
 
+    if 'cornet' in arch:
+        model_commitment = {
+            'region2layer': {
+                region: f'{region}.output' for region in ['V1', 'V2', 'V4', 'IT']
+            },
+            'layers': [
+                f'{region}.output' for region in ['V1', 'V2', 'V4', 'IT']
+            ] + ['decoder.avgpool'],
+            'behavioral_readout_layer': 'decoder.avgpool'
+        }
+
     # Check if the architecture has a corresponding commitment
-    if arch in model_commitments:
+    elif arch in model_commitments:
         dataset = model_info['dataset']
         # Retrieve the specific commitment for the dataset and seed
         model_commitment = model_commitments[arch][f'{dataset}_full']['seed-0']
