@@ -258,13 +258,14 @@ def load_model(model_id: str, checkpoints_dir: Optional[str] = None) -> Composer
     return model
 
 
-def load_brain_model(model_id: str, checkpoints_dir: Optional[str] = None) -> ModelCommitment:
+def load_brain_model(model_id: str, checkpoints_dir: Optional[str] = None, bs_identifier:str=None) -> ModelCommitment:
     """
     Load a brain model wrapped with brain region commitments based on the provided model ID.
 
     Args:
         model_id (str): The identifier of the model to load.
         checkpoints_dir (Optional[str], optional): The directory containing model checkpoints. Defaults to None.
+        bs_identifier (str, optional): The identifier to pass to the brainscore model wrapper. Defaults to None.
 
     Raises:
         ValueError: If the training configuration for the model architecture cannot be loaded.
@@ -329,8 +330,9 @@ def load_brain_model(model_id: str, checkpoints_dir: Optional[str] = None) -> Mo
         raise ValueError(f"Training config for model with arch {arch} cannot be loaded.")
 
     # Wrap the loaded model with brain-specific transformations
+    identifier = bs_identifier or model_id
     brain_model = wrap_brain_model(
-        identifier=model_id,
+        identifier=identifier,
         model=model,
         resize_size=training_config.get('val_resize_size', 224),  # Default resize size if not specified
         crop_size=training_config.get('val_crop_size', 224),      # Default crop size if not specified
