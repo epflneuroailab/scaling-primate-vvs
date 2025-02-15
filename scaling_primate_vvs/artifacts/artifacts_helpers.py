@@ -182,6 +182,66 @@ def load_yaml(yaml_file: str) -> Dict[Any, Any]:
     return config
 
 
+def get_model_commitment(model_id:str, arch:str=None, dataset:str=None, seed:int=0) -> Dict[str, Any]:
+    """
+    Retrieve the model commitment for a given model ID or architecture, dataset, and seed.
+
+    Args:
+        model_id (str): The identifier of the model to retrieve the commitment for.
+        arch (str, optional): The architecture of the model. Defaults to None.
+        dataset (str, optional): The dataset used for training the model. Defaults to None.
+        seed (int, optional): The seed used for training the model. Defaults to 0.
+
+    Returns:
+        Dict[str, Any]: The model commitment dictionary.
+    """
+    
+    if model_id is not None:
+        # Retrieve model information from the results dataframe
+        model_info = DF_RESULTS[DF_RESULTS['model_id'] == model_id].iloc[0]
+        arch = model_info['arch']
+        dataset = model_info['dataset']
+    else:
+        if arch is None or dataset is None:
+            raise ValueError("If model_id is not provided, arch and dataset must be provided.")
+    
+    # Define the directory containing brainscore artifacts
+    brainscore_artifacts_dir = Path(__file__).parent.parent / 'brainscore/artifacts'
+    model_commitment_file = brainscore_artifacts_dir / 'commitments.json'
+
+    # Attempt to load model commitments from the JSON file
+    try:
+        with open(model_commitment_file, 'r') as f:
+            model_commitments = json.load(f)
+            # Normalize keys to lowercase for consistent access
+            model_commitments = {k.lower(): v for k, v in model_commitments.items()}
+    except FileNotFoundError:
+        logging.warning(f"File {model_commitment_file} not found.")
+        model_commitments = {}
+        
+        
+    if 'cornet' in arch:
+        model_commitment = {
+            'region2layer': {
+                region: f'{region}.output' for region in ['V1', 'V2', 'V4', 'IT']
+            },
+            'layers': [
+                f'{region}.output' for region in ['V1', 'V2', 'V4', 'IT']
+            ] + ['decoder.avgpool'],
+            'behavioral_readout_layer': 'decoder.avgpool'
+        }
+    # Check if the architecture has a corresponding commitment
+    elif arch in model_commitments:
+        dataset = model_info['dataset']
+        # Retrieve the specific commitment for the dataset and seed
+        model_commitment = model_commitments[arch][f'{dataset}_full']['seed-0']
+    else:
+        logging.warning(f"Model commitment for model with id {model_id} not found.")
+        model_commitment = {}
+
+    return model_commitment
+
+
 def load_model(model_id: str, checkpoints_dir: Optional[str] = None) -> ComposerModel:
     """
     Load a ComposerModel based on the provided model ID and optional checkpoints directory.
@@ -283,44 +343,13 @@ def load_brain_model(model_id: str, checkpoints_dir: Optional[str] = None, bs_id
         model = model.model
     else:
         raise ValueError("Model cannot be unwrapped.")
-
-    # Define the directory containing brainscore artifacts
-    brainscore_artifacts_dir = Path(__file__).parent.parent / 'brainscore/artifacts'
-    model_commitment_file = brainscore_artifacts_dir / 'commitments.json'
-
-    # Attempt to load model commitments from the JSON file
-    try:
-        with open(model_commitment_file, 'r') as f:
-            model_commitments = json.load(f)
-            # Normalize keys to lowercase for consistent access
-            model_commitments = {k.lower(): v for k, v in model_commitments.items()}
-    except FileNotFoundError:
-        logging.warning(f"File {model_commitment_file} not found.")
-        model_commitments = {}
-
-    # Retrieve model information from the results dataframe
+    
+    # Retrieve the model architecture from the model ID
     model_info = DF_RESULTS[DF_RESULTS['model_id'] == model_id].iloc[0]
     arch = model_info['arch']
 
-    if 'cornet' in arch:
-        model_commitment = {
-            'region2layer': {
-                region: f'{region}.output' for region in ['V1', 'V2', 'V4', 'IT']
-            },
-            'layers': [
-                f'{region}.output' for region in ['V1', 'V2', 'V4', 'IT']
-            ] + ['decoder.avgpool'],
-            'behavioral_readout_layer': 'decoder.avgpool'
-        }
-
-    # Check if the architecture has a corresponding commitment
-    elif arch in model_commitments:
-        dataset = model_info['dataset']
-        # Retrieve the specific commitment for the dataset and seed
-        model_commitment = model_commitments[arch][f'{dataset}_full']['seed-0']
-    else:
-        logging.warning(f"Model commitment for model with id {model_id} not found.")
-        model_commitment = {}
+    # Retrieve the model commitment for the model
+    model_commitment = get_model_commitment(model_id)
 
     # Load the training configuration for the model
     try:
