@@ -318,7 +318,7 @@ def load_model(model_id: str, checkpoints_dir: Optional[str] = None) -> Composer
     return model
 
 
-def load_brain_model(model_id: str, checkpoints_dir: Optional[str] = None, bs_identifier:str=None, model_commitment:Dict[Union[str:List[str], str:Dict[str:str]]]=None) -> ModelCommitment:
+def load_brain_model(model_id: str, checkpoints_dir: Optional[str] = None, bs_identifier:str=None, model_commitment:Dict[str, Union[List[str], Dict[str, str]]]=None) -> ModelCommitment:
     """
     Load a brain model wrapped with brain region commitments based on the provided model ID.
 
