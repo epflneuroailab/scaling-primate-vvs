@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Literal, Optional, Dict, Any
+from typing import List, Literal, Optional, Dict, Any, Union
 import logging
 import json
 import yaml
@@ -318,7 +318,7 @@ def load_model(model_id: str, checkpoints_dir: Optional[str] = None) -> Composer
     return model
 
 
-def load_brain_model(model_id: str, checkpoints_dir: Optional[str] = None, bs_identifier:str=None) -> ModelCommitment:
+def load_brain_model(model_id: str, checkpoints_dir: Optional[str] = None, bs_identifier:str=None, model_commitment:Dict[Union[str:List[str], str:Dict[str:str]]]=None) -> ModelCommitment:
     """
     Load a brain model wrapped with brain region commitments based on the provided model ID.
 
@@ -326,6 +326,8 @@ def load_brain_model(model_id: str, checkpoints_dir: Optional[str] = None, bs_id
         model_id (str): The identifier of the model to load.
         checkpoints_dir (Optional[str], optional): The directory containing model checkpoints. Defaults to None.
         bs_identifier (str, optional): The identifier to pass to the brainscore model wrapper. Defaults to None.
+        model_commitment (Dict[Union[str:List[str], str:Dict[str:str]]], optional): The model commitment dictionary. Defaults to None.
+            If not provided, it will be retrieved based on the model ID. 
 
     Raises:
         ValueError: If the training configuration for the model architecture cannot be loaded.
@@ -348,8 +350,9 @@ def load_brain_model(model_id: str, checkpoints_dir: Optional[str] = None, bs_id
     model_info = DF_RESULTS[DF_RESULTS['model_id'] == model_id].iloc[0]
     arch = model_info['arch']
 
-    # Retrieve the model commitment for the model
-    model_commitment = get_model_commitment(model_id)
+    if model_commitment is None:
+        # Retrieve the model commitment for the model
+        model_commitment = get_model_commitment(model_id)
 
     # Load the training configuration for the model
     try:
