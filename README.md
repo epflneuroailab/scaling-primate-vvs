@@ -4,6 +4,8 @@
 
 This repository contains code, links to model checkpoints and benchmark results for our study on scaling laws in computational models of the primate visual system. We systematically evaluate over 600 models to understand how model size, dataset size, and compute resources impact alignment with brain function and behavior.
 
+Published at ICML'25 as a Spotlight paper.
+
 ## Overview
 
 Our study explores:
