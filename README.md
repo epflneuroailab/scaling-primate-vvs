@@ -1,6 +1,12 @@
 # Scaling Laws for Task-Optimized Models of the Primate Visual Ventral Stream
 
 [![arXiv](https://img.shields.io/badge/arXiv-2411.05712-b31b1b.svg)](https://arxiv.org/abs/2411.05712)
+[![Project Page](https://img.shields.io/badge/Project%20Page-EPFL%20site-E60028.svg?logoColor=white)](https://scaling-primate-vvs.epfl.ch/)
+[![OpenReview](https://img.shields.io/badge/OpenReview-WxY61MmHYo-1A3D91.svg?logoColor=white)](https://openreview.net/forum?id=WxY61MmHYo)
+[![ICML 2025](https://img.shields.io/badge/ICML-2025-0B5D1E.svg?logoColor=white)](https://icml.cc/virtual/2025/poster/44987)
+[![Poster](https://img.shields.io/badge/Poster-PNG-2B90D9.svg)](https://icml.cc/media/PosterPDFs/ICML%202025/44987.png?t=1752422604.6563747)
+
+
 
 This repository contains code, links to model checkpoints and benchmark results for our study on scaling laws in computational models of the primate visual system. We systematically evaluate over 600 models to understand how model size, dataset size, and compute resources impact alignment with brain function and behavior.
 
@@ -130,12 +136,13 @@ Follow these steps to install the `scaling_primate_vvs` package:
 
 ### Citation
 ```
-@article{gokce2024scalingprimatevvs,
-      title={Scaling Laws for Task-Optimized Models of the Primate Visual Ventral Stream}, 
-      author={Abdulkadir Gokce and Martin Schrimpf},
-      year={2024},
-      eprint={2411.05712},
-      archivePrefix={arXiv},
-      url={https://arxiv.org/abs/2411.05712}, 
-}
+  @inproceedings{
+    gokce2025scalingprimatevvs,
+    title={Scaling Laws for Task-Optimized Models of the Primate Visual Ventral Stream},
+    author={Abdulkadir Gokce and Martin Schrimpf},
+    booktitle={Forty-second International Conference on Machine Learning},
+    year={2025},
+    url={https://openreview.net/forum?id=WxY61MmHYo}
+  }
+  
 ```
