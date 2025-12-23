@@ -83,7 +83,7 @@ def create_deitflex_model(
     assert 0 <= geom_id and geom_id < geom_num, f"Invalid geom_id: {geom_id}"
     divisors = scale*np.geomspace(geom_start, geom_end, geom_num+1)
     d = divisors[geom_id+1] # The first divisor is always 1, so we skip it
-    width = np.round(width / d / n_heads).astype(int)*n_heads
+    width = (np.round(width / d / n_heads).astype(int)*n_heads).item()
     
     init_values = float(kwargs["layer_scale_init_value"])
     drop_path_rate = float(kwargs["drop_path_rate"])

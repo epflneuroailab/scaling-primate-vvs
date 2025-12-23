@@ -143,8 +143,8 @@ def create_convnextflex_model(
             return f"{x/1e6:.1f}M"
         return f"{x/1e9:.1f}B"
     
-    depth = np.array([3, 3, 9, 3]) # ConvNext-Tiny
-    # depth = np.array([3, 3, 27, 3]) # ConvNext-Small
+    depth = [3, 3, 9, 3] # ConvNext-Tiny
+    # depth = [3, 3, 27, 3] # ConvNext-Small
     
     config = layer_config.split("-")
     config_str = config[0]
@@ -174,6 +174,7 @@ def create_convnextflex_model(
 
     width = np.array([96, 192, 384, 768])
     width = np.round(width / d / 8).astype(int)*8
+    width = width.tolist()
     
     block_setting = [
         CNBlockConfig(width[0], width[1], depth[0]),

@@ -66,9 +66,9 @@ def create_model(**kwargs):
             model = create_efficientnet_model(**kwargs)
         elif arch in VIT_MODELS:
             model = create_vit_model(**kwargs)
-        elif arch in CONVNEXT_MODELS:
+        elif arch in CONVNEXT_MODELS or "convnextflex" in arch:
             model = create_convnext_model(**kwargs)
-        elif arch in DEIT_MODELS:
+        elif arch in DEIT_MODELS or "deitflex" in arch:
             model = create_deit_model(**kwargs)
         elif arch in AIM_MODELS:
             model = create_aim_model(**kwargs)
