@@ -12,6 +12,13 @@ This repository contains code, links to model checkpoints and benchmark results 
 
 Published at ICML'25 as a Spotlight paper.
 
+## Updates
+
+- **2026-05-14** — To reduce storage and egress costs, intermediate training checkpoints have been moved to a private bucket. Final checkpoints for each run remain publicly accessible via the original download instructions. If you need the intermediate checkpoints, please contact us for access.
+
+
+
+
 ## Overview
 
 Our study explores:
